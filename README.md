@@ -80,6 +80,16 @@ spectral lint best-selling.openapi.yaml --ruleset .spectral.yaml
 
 ### Exercise 4
 
+Go to Jentic's AI-Readiness Scoring at [https://jentic.com/scorecard](https://jentic.com/scorecard).
+
+1. Now score your API from exercise 3 (you'll need to save it as a YAML or JSON file).
+2. Based on the feedback, make alterations to your OpenAPI (you can use Swagger, Scalar, your IDE, or your LLM of choice)
+3. Re-score and see if you've improved the score.
+
+Repeat as needed. Can you get to `AI-Ready`?
+
+### Exercise 5
+
 Let's use an overlay to make some changes to our API before publishing. 
 
 Sample changes:
@@ -87,7 +97,7 @@ Sample changes:
 - Remove the `/purchase` endpoint and related schemas as we don't want to expose that to public consumers
 
 Take your API and pasted it into the left hand column in [Speakeasy\'s Overlay Playground](https://overlay.speakeasy.com/).
-Now get the Overlay file in [exercise-4](./exercise-4/remove-purchase-endpoint.overlay.yaml) and paste it into the Overlay column (right hand side). Review the changes in the central column.
+Now get the Overlay file in [exercise-4](./exercise-5/remove-purchase-endpoint.overlay.yaml) and paste it into the Overlay column (right hand side). Review the changes in the central column.
 
 Next steps:
 - change the endpoint `/books/best-selling` to `books/best-sellers`
