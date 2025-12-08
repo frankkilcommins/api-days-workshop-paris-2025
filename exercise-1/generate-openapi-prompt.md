@@ -1,0 +1,2 @@
+Generate an OpenAPI doc for the following user story:
+Expose endpoints that will allow a user to find the best selling books on the New York Times for the last <number> of days. Allow the details on each book also to be retrieved, things like author, publishedOn, price, trending info, rating. Once a book is known, provide the ability to find locations where the book can be purchased (physical and online). Additionally, there should be an ability to buy a book or list of books.

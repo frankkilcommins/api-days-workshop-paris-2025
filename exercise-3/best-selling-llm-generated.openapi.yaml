@@ -1,0 +1,325 @@
+openapi: 3.1.2
+info:
+  title: Best Selling Books API
+  version: 1.0.0
+  description: API for retrieving New York Times best-selling books, book details, purchase locations, and placing book purchase orders.
+servers:
+  - url: https://api.example.com
+
+paths:
+  /books/best-selling:
+    get:
+      operationId: getBestSellingBooks
+      summary: Retrieve best-selling books for the last number of days
+      description: Returns a paginated list of best-selling books from the New York Times for the last specified number of days.
+      parameters:
+        - $ref: '#/components/parameters/days'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Successful response containing best-selling books
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bookListResponse'
+              examples:
+                example:
+                  value:
+                    books:
+                      - id: "12345"
+                        title: "The Example Book"
+                        author: "Jane Doe"
+                        publishedOn: "2021-10-10"
+                        price: 19.99
+                        trendingInfo: "Trending upwards"
+                        rating: 4.5
+                    page: 1
+                    limit: 20
+        '400':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/BadRequest'
+        '401':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/Unauthorized'
+        '422':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ValidationError'
+        '500':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ServerError'
+        '503':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ServiceUnavailable'
+
+  /books/{bookId}:
+    get:
+      operationId: getBookDetails
+      summary: Retrieve details for a specific book
+      description: Fetch detailed book information including author, published date, pricing, trending details, and rating.
+      parameters:
+        - $ref: '#/components/parameters/bookId'
+      responses:
+        '200':
+          description: Book details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/book'
+              examples:
+                example:
+                  value:
+                    id: "12345"
+                    title: "The Example Book"
+                    author: "Jane Doe"
+                    publishedOn: "2021-10-10"
+                    price: 19.99
+                    trendingInfo: "Trending upwards"
+                    rating: 4.5
+        '400':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/BadRequest'
+        '401':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/Unauthorized'
+        '422':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ValidationError'
+        '500':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ServerError'
+        '503':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ServiceUnavailable'
+
+  /books/{bookId}/locations:
+    get:
+      operationId: getBookPurchaseLocations
+      summary: Retrieve locations where a book can be purchased
+      description: Returns both physical and online locations where the specified book can be purchased.
+      parameters:
+        - $ref: '#/components/parameters/bookId'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Purchase locations retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/locationListResponse'
+              examples:
+                example:
+                  value:
+                    locations:
+                      - id: "loc-001"
+                        type: "physical"
+                        name: "Bookstore A"
+                        address: "123 Main St, Cityville"
+                      - id: "loc-002"
+                        type: "online"
+                        name: "BookWorld"
+                        url: "https://bookworld.com/example"
+                    page: 1
+                    limit: 20
+        '400':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/BadRequest'
+        '401':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/Unauthorized'
+        '422':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ValidationError'
+        '500':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ServerError'
+        '503':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ServiceUnavailable'
+
+  /purchases:
+    post:
+      operationId: purchaseBooks
+      summary: Purchase one or more books
+      description: Allows a user to purchase a single book or multiple books.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/purchaseRequest'
+            examples:
+             - example:
+                description: sample purchase request
+                value:
+                  bookIds:
+                    - "12345"
+                    - "67890"
+                  paymentMethod: "creditCard"
+                  currency: "USD"
+      responses:
+        '201':
+          description: Purchase successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/purchaseResponse'
+              examples:
+                example:
+                  value:
+                    purchaseId: "pur-001"
+                    status: "confirmed"
+                    totalAmount: 39.98
+        '400':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/BadRequest'
+        '401':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/Unauthorized'
+        '422':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ValidationError'
+        '500':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ServerError'
+        '503':
+          $ref: 'https://api.swaggerhub.com/domains/smartbear-public/ProblemDetails/1.0.0#/components/responses/ServiceUnavailable'
+
+components:
+  parameters:
+    days:
+      name: days
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 365
+        default: 10
+      description: Number of past days to consider when retrieving best-selling books.
+    page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+        maximum: 100
+      description: Page number for paginated responses.
+    limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 20
+        maximum: 100        
+      description: Number of items per page.
+    bookId:
+      name: bookId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Unique identifier for the book.
+
+  schemas:
+    book:
+      type: object
+      description: Book details including trending and rating information.
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the book.
+          readOnly: true
+        title:
+          type: string
+          description: Title of the book.
+        author:
+          type: string
+          description: Author of the book.
+        publishedOn:
+          type: string
+          format: date
+          description: Date the book was published.
+        price:
+          type: number
+          description: Price of the book.
+        trendingInfo:
+          type: string
+          description: Information about the book's trending status.
+        rating:
+          type: number
+          description: Average user rating for the book.
+      required:
+        - title
+        - author
+        - publishedOn
+        - price
+        - trendingInfo
+        - rating
+
+    bookListResponse:
+      type: object
+      description: Paginated list of best-selling books.
+      properties:
+        books:
+          type: array
+          description: List of best-selling books.
+          items:
+            $ref: '#/components/schemas/book'
+        page:
+          type: integer
+          description: Current page number.
+        limit:
+          type: integer
+          description: Number of items per page.
+
+    location:
+      type: object
+      description: Represents a location where the book can be purchased.
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the location.
+        type:
+          type: string
+          description: Type of location (physical or online).
+        name:
+          type: string
+          description: Name of the store or retailer.
+        address:
+          type: string
+          description: Physical address, if applicable.
+        url:
+          type: string
+          description: URL for online purchase, if applicable.
+
+    locationListResponse:
+      type: object
+      description: Paginated list of purchase locations for a book.
+      properties:
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/location'
+          description: List of purchase locations.
+        page:
+          type: integer
+        limit:
+          type: integer
+
+    purchaseRequest:
+      type: object
+      description: Request to purchase a list of books.
+      properties:
+        bookIds:
+          type: array
+          description: List of book IDs being purchased.
+          items:
+            type: string
+        paymentMethod:
+          type: string
+          description: Payment method used for the purchase.
+        currency:
+          type: string
+          description: Currency for the transaction.
+      required:
+        - bookIds
+        - paymentMethod
+        - currency
+
+    purchaseResponse:
+      type: object
+      description: Response returned after a purchase is created.
+      properties:
+        purchaseId:
+          type: string
+          description: Unique purchase identifier.
+        status:
+          type: string
+          description: Status of the purchase.
+        totalAmount:
+          type: number
+          description: Total cost of the books purchased.

@@ -1,0 +1,7 @@
+extends:
+  - spectral:oas
+  - spectral:arazzo
+  - spectral:asyncapi
+
+rules:
+  oas3-schema: error
